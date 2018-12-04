@@ -241,7 +241,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "macosx iphoneos";
-				VALID_ARCHS = "i386 x86_64 amr64 armv7s armv7";
+				VALID_ARCHS = "i386 x86_64 arm64 armv7s armv7";
 			};
 			name = Debug;
 		};
@@ -295,7 +295,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "macosx iphoneos";
-				VALID_ARCHS = "i386 x86_64 amr64 armv7s armv7";
+				VALID_ARCHS = "i386 x86_64 arm64 armv7s armv7";
 			};
 			name = Release;
 		};
