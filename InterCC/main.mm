@@ -36,7 +36,7 @@
 
 using namespace qmi;
 
-//#define CONSOLE_OUTPUT
+#define CONSOLE_OUTPUT
 
 #ifdef CONSOLE_OUTPUT
 #define DEBUG_LOG                   qmilog("INTER: %s\n", __func__);
@@ -56,15 +56,19 @@ using namespace qmi;
 
 #pragma mark -
 
-void hexdumpc(unsigned char *data, unsigned int amount) {
-    ENABLE_COLOR(FGCYN)
+void hexdumpcc(unsigned char *data, unsigned int amount, const char *color) {
+    ENABLE_COLOR(color)
     hexdump(data, amount);
     DISABLE_COLOR
 }
 
+void hexdumpc(unsigned char *data, unsigned int amount) {
+    hexdumpcc(data, amount, FGCYN);
+}
+
 void hexdumpct(unsigned char *data, unsigned int amount) {
-#ifdef CONSOLE_OUTPUT
-    unsigned int limit = 100;
+//#ifdef CONSOLE_OUTPUT
+    unsigned int limit = 128;
     if (amount <= limit) {
         hexdumpc(data, amount);
     } else {
@@ -74,9 +78,9 @@ void hexdumpct(unsigned char *data, unsigned int amount) {
         qmilog("\t-> last %d bytes\n", limit);
         hexdumpc(data+amount-limit, limit);
     }
-#else
-    hexdumpc(data, amount);
-#endif
+//#else
+//    hexdumpc(data, amount);
+//#endif
 }
 
 #pragma mark - Init
@@ -104,20 +108,28 @@ int _fclose(FILE *file) {
 
 #pragma mark - IOKit
 
-//io_service_t
-//_IOServiceGetMatchingService(mach_port_t masterPort,
-//                             CFDictionaryRef matching) {
-//    DEBUG_LOG_COLOR(FGGRN)
-//    return IOServiceGetMatchingService(masterPort, matching);
-//} DYLD_INTERPOSE(_IOServiceGetMatchingService, IOServiceGetMatchingService)
-//
-//kern_return_t
-//_IOServiceGetMatchingServices(mach_port_t masterPort,
-//                              CFDictionaryRef matching,
-//                              io_iterator_t *existing) {
-//    DEBUG_LOG_COLOR(FGGRN)
-//    return IOServiceGetMatchingServices(masterPort, matching, existing);
-//} DYLD_INTERPOSE(_IOServiceGetMatchingServices, IOServiceGetMatchingServices)
+kern_return_t
+_IOObjectRelease(io_object_t object) {
+    DEBUG_LOG_COLOR(FGGRN)
+    return IOObjectRelease(object);
+} DYLD_INTERPOSE(_IOObjectRelease, IOObjectRelease)
+
+io_service_t
+_IOServiceGetMatchingService(mach_port_t masterPort,
+                             CFDictionaryRef matching) {
+    DEBUG_LOG_COLOR(FGGRN)
+    qmilog("\t-> matching: %s\n", ((__bridge NSMutableDictionary *)matching).description.UTF8String);
+    return IOServiceGetMatchingService(masterPort, matching);
+} DYLD_INTERPOSE(_IOServiceGetMatchingService, IOServiceGetMatchingService)
+
+kern_return_t
+_IOServiceGetMatchingServices(mach_port_t masterPort,
+                              CFDictionaryRef matching,
+                              io_iterator_t *existing) {
+    DEBUG_LOG_COLOR(FGGRN)
+    qmilog("\t-> matching: %s\n", ((__bridge NSMutableDictionary *)matching).description.UTF8String);
+    return IOServiceGetMatchingServices(masterPort, matching, existing);
+} DYLD_INTERPOSE(_IOServiceGetMatchingServices, IOServiceGetMatchingServices)
 
 //io_object_t
 //_IOIteratorNext(io_iterator_t iterator) {
@@ -133,7 +145,7 @@ _IOServiceOpen(io_service_t service,
     DEBUG_LOG_COLOR(FGGRN)
     char entryName[128];
     IORegistryEntryGetName(service, entryName);
-    qmilog("\t-> name: %s, service: %d\n", entryName, service);
+    qmilog("\t-> name: %s, service: %d, owningTask: %d\n", entryName, service, owningTask);
     
     kern_return_t result = IOServiceOpen(service, owningTask, type, connect);
     qmilog("\t-> conn: %d, type: 0x%02x\n", *connect, type);
@@ -150,6 +162,8 @@ _IOServiceClose(io_connect_t connect) {
     DEBUG_LOG_COLOR(FGGRN)
     return IOServiceClose(connect);
 } DYLD_INTERPOSE(_IOServiceClose, IOServiceClose)
+
+#pragma IOKit Call Sync Method
 
 kern_return_t
 _IOConnectCallMethod(mach_port_t connection,
@@ -233,27 +247,317 @@ _IOConnectCallStructMethod(mach_port_t connection,
     }    return result;
 } DYLD_INTERPOSE(_IOConnectCallStructMethod, IOConnectCallStructMethod)
 
-//kern_return_t
-//_IOCreatePlugInInterfaceForService(io_service_t service,
-//                                   CFUUIDRef pluginType,
-//                                   CFUUIDRef interfaceType,
-//                                   IOCFPlugInInterface ***theInterface,
-//                                   SInt32 *theScore) {
-//    DEBUG_LOG_RED
-//    return IOCreatePlugInInterfaceForService(service, pluginType, interfaceType, theInterface, theScore);
-//} DYLD_INTERPOSE(_IOCreatePlugInInterfaceForService, IOCreatePlugInInterfaceForService)
-//
-//kern_return_t
-//_IODestroyPlugInInterface(IOCFPlugInInterface **interface) {
-//    DEBUG_LOG_RED
-//    return IODestroyPlugInInterface(interface);
-//} DYLD_INTERPOSE(_IODestroyPlugInInterface, IODestroyPlugInInterface)
-//
+#pragma IOKit Call Async Method
+
+kern_return_t
+_IOConnectCallAsyncMethod(mach_port_t connection,
+                          uint32_t selector,
+                          mach_port_t wake_port,
+                          uint64_t *reference,
+                          uint32_t referenceCnt,
+                          const uint64_t *input,
+                          uint32_t inputCnt,
+                          const void *inputStruct,
+                          size_t inputStructCnt,
+                          uint64_t *output,
+                          uint32_t *outputCnt,
+                          void *outputStruct,
+                          size_t *outputStructCnt) {
+    DEBUG_LOG_COLOR(FGMAG)
+    kern_return_t result = IOConnectCallAsyncMethod(connection, selector,
+                                                    wake_port, reference, referenceCnt,
+                                                    input, inputCnt,
+                                                    inputStruct, inputStructCnt,
+                                                    output, outputCnt,
+                                                    outputStruct, outputStructCnt);
+    qmilog("\t-> sel: 0x%02x, conn: %d\n", selector, connection);
+    if (input != NULL) {
+        qmilog("\t-> input: %d\n", inputCnt);
+        hexdumpct((unsigned char *)input, inputCnt);
+    }
+    if (inputStruct != NULL) {
+        qmilog("\t-> inputStruct: %d\n", inputStructCnt);
+        hexdumpct((unsigned char *)inputStruct, inputStructCnt);
+    }
+    if (output != NULL) {
+        qmilog("\t-> output: %d\n", *outputCnt);
+        hexdumpct((unsigned char *)output, *outputCnt);
+    }
+    if (outputStruct != NULL) {
+        qmilog("\t-> outputStruct: %d\n", *outputStructCnt);
+        hexdumpct((unsigned char *)outputStruct, *outputStructCnt);
+    }
+    return result;
+} DYLD_INTERPOSE(_IOConnectCallAsyncMethod, IOConnectCallAsyncMethod);
+
+kern_return_t
+_IOConnectCallAsyncScalarMethod(mach_port_t connection,
+                                uint32_t selector,
+                                mach_port_t wake_port,
+                                uint64_t *reference,
+                                uint32_t referenceCnt,
+                                const uint64_t *input,
+                                uint32_t inputCnt,
+                                uint64_t *output,
+                                uint32_t *outputCnt) {
+    DEBUG_LOG_COLOR(FGGRN)
+    kern_return_t result = IOConnectCallAsyncScalarMethod(connection, selector,
+                                                          wake_port, reference, referenceCnt,
+                                                          input, inputCnt,
+                                                          output, outputCnt);
+    qmilog("\t-> sel: 0x%02x, conn: %d\n", selector, connection);
+    if (input != NULL) {
+        qmilog("\t-> input: %d\n", inputCnt);
+        hexdumpct((unsigned char *)input, inputCnt);
+    }
+    if (output != NULL) {
+        qmilog("\t-> output: %d\n", *outputCnt);
+        hexdumpct((unsigned char *)output, *outputCnt);
+    }
+    return result;
+} DYLD_INTERPOSE(_IOConnectCallAsyncScalarMethod, IOConnectCallAsyncScalarMethod)
+
+kern_return_t
+_IOConnectCallAsyncStructMethod(mach_port_t connection,
+                                uint32_t selector,
+                                mach_port_t wake_port,
+                                uint64_t *reference,
+                                uint32_t referenceCnt,
+                                const void *inputStruct,
+                                size_t inputStructCnt,
+                                void *outputStruct,
+                                size_t *outputStructCnt) {
+    DEBUG_LOG_COLOR(FGGRN)
+    kern_return_t result = IOConnectCallAsyncStructMethod(connection, selector,
+                                                          wake_port, reference, referenceCnt,
+                                                          inputStruct, inputStructCnt,
+                                                          outputStruct, outputStructCnt);
+    qmilog("\t-> sel: 0x%02x, conn: %d\n", selector, connection);
+    if (inputStruct != NULL) {
+        qmilog("\t-> inputStruct: %d\n", inputStructCnt);
+        hexdumpct((unsigned char *)inputStruct, inputStructCnt);
+    }
+    if (outputStruct != NULL) {
+        qmilog("\t-> outputStruct: %d\n", *outputStructCnt);
+        hexdumpct((unsigned char *)outputStruct, *outputStructCnt);
+    }
+    return result;
+} DYLD_INTERPOSE(_IOConnectCallAsyncStructMethod, IOConnectCallAsyncStructMethod)
+
+static HRESULT (*original_IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface)(void *thisPointer, REFIID iid, LPVOID *ppv);
+HRESULT _IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv);
+
+static HRESULT (*original_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface)(void *thisPointer, REFIID iid, LPVOID *ppv);
+HRESULT _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv);
+
+kern_return_t
+_IOCreatePlugInInterfaceForService(io_service_t service,
+                                   CFUUIDRef pluginType,
+                                   CFUUIDRef interfaceType,
+                                   IOCFPlugInInterface ***theInterface,
+                                   SInt32 *theScore) {
+    DEBUG_LOG_COLOR(FGGRN)
+    qmilog("\t-> service: %d, pluginType: %s, interfaceType: %s\n", service,
+           CFStringGetCStringPtr(CFUUIDCreateString(kCFAllocatorDefault, pluginType), kCFStringEncodingASCII),
+           CFStringGetCStringPtr(CFUUIDCreateString(kCFAllocatorDefault, interfaceType), kCFStringEncodingASCII));
+    kern_return_t result = IOCreatePlugInInterfaceForService(service, pluginType, interfaceType, theInterface, theScore);
+    if (CFStringCompare(CFUUIDCreateString(kCFAllocatorDefault, pluginType),
+                        CFUUIDCreateString(kCFAllocatorDefault, kIOUSBDeviceUserClientTypeID), 0) == kCFCompareEqualTo) {
+        original_IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface = (**theInterface)->QueryInterface;
+        (**theInterface)->QueryInterface = _IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface;
+    } else if (CFStringCompare(CFUUIDCreateString(kCFAllocatorDefault, pluginType),
+                               CFUUIDCreateString(kCFAllocatorDefault, kIOUSBInterfaceUserClientTypeID), 0) == kCFCompareEqualTo) {
+        original_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface = (**theInterface)->QueryInterface;
+        (**theInterface)->QueryInterface = _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface;
+    }
+    return result;
+} DYLD_INTERPOSE(_IOCreatePlugInInterfaceForService, IOCreatePlugInInterfaceForService)
+
+kern_return_t
+_IODestroyPlugInInterface(IOCFPlugInInterface **interface) {
+    DEBUG_LOG_COLOR(FGGRN)
+    return IODestroyPlugInInterface(interface);
+} DYLD_INTERPOSE(_IODestroyPlugInInterface, IODestroyPlugInInterface)
+
 //kern_return_t
 //_IOCreateReceivePort(uint32_t msgType, mach_port_t *recvPort) {
 //    DEBUG_LOG_RED
 //    return IOCreateReceivePort(msgType, recvPort);
 //} DYLD_INTERPOSE(_IOCreateReceivePort, IOCreateReceivePort)
+
+#pragma mark - IOCFPlugInInterface
+
+static IOReturn (*original_IOUSBDeviceInterface_USBDeviceOpen)(void *self);
+IOReturn _IOUSBDeviceInterface_USBDeviceOpen(void *self);
+
+static IOReturn (*original_IOUSBDeviceInterface_USBDeviceClose)(void *self);
+IOReturn _IOUSBDeviceInterface_USBDeviceClose(void *self);
+
+static IOReturn (*original_IOUSBDeviceInterface_GetNumberOfConfigurations)(void *self, UInt8 *numConfig);
+IOReturn _IOUSBDeviceInterface_GetNumberOfConfigurations(void *self, UInt8 *numConfig);
+
+static IOReturn (*original_IOUSBDeviceInterface_GetConfiguration)(void *self, UInt8 *configNum);
+IOReturn _IOUSBDeviceInterface_GetConfiguration(void *self, UInt8 *configNum);
+
+static IOReturn (*original_IOUSBDeviceInterface_SetConfiguration)(void *self, UInt8 configNum);
+IOReturn _IOUSBDeviceInterface_SetConfiguration(void *self, UInt8 configNum);
+
+static IOReturn (*original_IOUSBDeviceInterface_CreateInterfaceIterator)(void *self, IOUSBFindInterfaceRequest *req, io_iterator_t *iter);
+IOReturn _IOUSBDeviceInterface_CreateInterfaceIterator(void *self, IOUSBFindInterfaceRequest *req, io_iterator_t *iter);
+
+HRESULT _IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv) {
+    DEBUG_LOG_COLOR(FGYEL)
+    HRESULT result = original_IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface(thisPointer, iid, ppv);
+    IOUSBDeviceInterface *device = **(IOUSBDeviceInterface ***)ppv;
+    
+    original_IOUSBDeviceInterface_USBDeviceOpen = device->USBDeviceOpen;
+    device->USBDeviceOpen = _IOUSBDeviceInterface_USBDeviceOpen;
+    
+    original_IOUSBDeviceInterface_USBDeviceClose = device->USBDeviceClose;
+    device->USBDeviceClose = _IOUSBDeviceInterface_USBDeviceClose;
+
+    original_IOUSBDeviceInterface_GetNumberOfConfigurations = device->GetNumberOfConfigurations;
+    device->GetNumberOfConfigurations = _IOUSBDeviceInterface_GetNumberOfConfigurations;
+
+    original_IOUSBDeviceInterface_GetConfiguration = device->GetConfiguration;
+    device->GetConfiguration = _IOUSBDeviceInterface_GetConfiguration;
+
+    original_IOUSBDeviceInterface_SetConfiguration = device->SetConfiguration;
+    device->SetConfiguration = _IOUSBDeviceInterface_SetConfiguration;
+
+    original_IOUSBDeviceInterface_CreateInterfaceIterator = device->CreateInterfaceIterator;
+    device->CreateInterfaceIterator = _IOUSBDeviceInterface_CreateInterfaceIterator;
+
+    return result;
+}
+
+#pragma mark -
+
+static IOReturn (*original_IOUSBInterfaceInterface_USBInterfaceOpen)(void *self);
+IOReturn _IOUSBInterfaceInterface_USBInterfaceOpen(void *self);
+
+static IOReturn (*original_IOUSBInterfaceInterface_USBInterfaceClose)(void *self);
+IOReturn _IOUSBInterfaceInterface_USBInterfaceClose(void *self);
+
+static IOReturn (*original_IOUSBInterfaceInterface_GetInterfaceNumber)(void *self, UInt8 *intfNumber);
+IOReturn _IOUSBInterfaceInterface_GetInterfaceNumber(void *self, UInt8 *intfNumber);
+
+static IOReturn (*original_IOUSBInterfaceInterface_ControlRequest)(void *self, UInt8 pipeRef, IOUSBDevRequest *req);
+IOReturn _IOUSBInterfaceInterface_ControlRequest(void *self, UInt8 pipeRef, IOUSBDevRequest *req);
+
+static IOReturn (*original_IOUSBInterfaceInterface_ReadPipe)(void *self, UInt8 pipeRef, void *buf, UInt32 *size);
+IOReturn _IOUSBInterfaceInterface_ReadPipe(void *self, UInt8 pipeRef, void *buf, UInt32 *size);
+
+static IOReturn (*original_IOUSBInterfaceInterface_WritePipe)(void *self, UInt8 pipeRef, void *buf, UInt32 size);
+IOReturn _IOUSBInterfaceInterface_WritePipe(void *self, UInt8 pipeRef, void *buf, UInt32 size);
+
+HRESULT _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv) {
+    DEBUG_LOG_COLOR(FGYEL)
+    HRESULT result = original_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(thisPointer, iid, ppv);
+    IOUSBInterfaceStruct *iface = **(IOUSBInterfaceStruct ***)ppv;
+
+    original_IOUSBInterfaceInterface_USBInterfaceOpen = iface->USBInterfaceOpen;
+    iface->USBInterfaceOpen = _IOUSBInterfaceInterface_USBInterfaceOpen;
+    
+    original_IOUSBInterfaceInterface_USBInterfaceClose = iface->USBInterfaceClose;
+    iface->USBInterfaceClose = _IOUSBInterfaceInterface_USBInterfaceClose;
+
+    original_IOUSBInterfaceInterface_GetInterfaceNumber = iface->GetInterfaceNumber;
+    iface->GetInterfaceNumber = _IOUSBInterfaceInterface_GetInterfaceNumber;
+
+    original_IOUSBInterfaceInterface_ControlRequest = iface->ControlRequest;
+    iface->ControlRequest = _IOUSBInterfaceInterface_ControlRequest;
+
+    original_IOUSBInterfaceInterface_ReadPipe = iface->ReadPipe;
+    iface->ReadPipe = _IOUSBInterfaceInterface_ReadPipe;
+
+    original_IOUSBInterfaceInterface_WritePipe = iface->WritePipe;
+    iface->WritePipe = _IOUSBInterfaceInterface_WritePipe;
+
+    return result;
+}
+
+#pragma mark - IOUSBDeviceInterface
+
+IOReturn _IOUSBDeviceInterface_USBDeviceOpen(void *self) {
+    DEBUG_LOG_COLOR(FGYEL)
+    return original_IOUSBDeviceInterface_USBDeviceOpen(self);
+}
+
+IOReturn _IOUSBDeviceInterface_USBDeviceClose(void *self) {
+    DEBUG_LOG_COLOR(FGYEL)
+    return original_IOUSBDeviceInterface_USBDeviceClose(self);
+}
+
+IOReturn _IOUSBDeviceInterface_GetNumberOfConfigurations(void *self, UInt8 *numConfig) {
+    DEBUG_LOG_COLOR(FGYEL)
+    IOReturn result = original_IOUSBDeviceInterface_GetNumberOfConfigurations(self, numConfig);
+    printf("\t-> numConfig: %d\n", *numConfig);
+    return result;
+}
+
+IOReturn _IOUSBDeviceInterface_GetConfiguration(void *self, UInt8 *configNum) {
+    DEBUG_LOG_COLOR(FGYEL)
+    IOReturn result = original_IOUSBDeviceInterface_GetConfiguration(self, configNum);
+    printf("\t-> configNum: %d\n", *configNum);
+    return result;
+}
+
+IOReturn _IOUSBDeviceInterface_SetConfiguration(void *self, UInt8 configNum) {
+    DEBUG_LOG_COLOR(FGYEL)
+    printf("\t-> configNum: %d\n", configNum);
+    return original_IOUSBDeviceInterface_SetConfiguration(self, configNum);
+}
+
+IOReturn _IOUSBDeviceInterface_CreateInterfaceIterator(void *self, IOUSBFindInterfaceRequest *req, io_iterator_t *iter) {
+    DEBUG_LOG_COLOR(FGYEL)
+    printf("\t-> bInterfaceClass: %d, bInterfaceSubClass: %d, bInterfaceProtocol: %d, bAlternateSetting: %d\n",
+           req->bInterfaceClass, req->bInterfaceSubClass, req->bInterfaceProtocol, req->bAlternateSetting);
+    return original_IOUSBDeviceInterface_CreateInterfaceIterator(self, req, iter);
+}
+
+#pragma mark - IOUSBInterfaceInterface
+
+IOReturn _IOUSBInterfaceInterface_USBInterfaceOpen(void *self) {
+    DEBUG_LOG_COLOR(FGYEL)
+    return original_IOUSBInterfaceInterface_USBInterfaceOpen(self);
+}
+
+IOReturn _IOUSBInterfaceInterface_USBInterfaceClose(void *self) {
+    DEBUG_LOG_COLOR(FGYEL)
+    return original_IOUSBInterfaceInterface_USBInterfaceClose(self);
+}
+
+IOReturn _IOUSBInterfaceInterface_GetInterfaceNumber(void *self, UInt8 *intfNumber) {
+    DEBUG_LOG_COLOR(FGYEL)
+    IOReturn result = original_IOUSBInterfaceInterface_GetInterfaceNumber(self, intfNumber);
+    printf("\t-> intfNumber: %d\n", *intfNumber);
+    return result;
+}
+
+IOReturn _IOUSBInterfaceInterface_ControlRequest(void *self, UInt8 pipeRef, IOUSBDevRequest *req) {
+    DEBUG_LOG_COLOR(FGYEL)
+    printf("\t-> bmRequestType: %d, bRequest: %d, wValue: %d, wLength: %d\n",
+           req->bmRequestType, req->bRequest, req->wValue, req->wLength);
+    printf("\t-> pData: %d\n", req->wLength);
+    hexdumpcc((unsigned char *)req->pData, req->wLength, FGYEL);
+    return original_IOUSBInterfaceInterface_ControlRequest(self, pipeRef, req);
+}
+
+IOReturn _IOUSBInterfaceInterface_ReadPipe(void *self, UInt8 pipeRef, void *buf, UInt32 *size) {
+    DEBUG_LOG_COLOR(FGYEL)
+    printf("\t-> pipeRef: %d\n", pipeRef);
+    IOReturn result = original_IOUSBInterfaceInterface_ReadPipe(self, pipeRef, buf, size);
+    hexdumpcc((unsigned char *)buf, *size, FGYEL);
+    return result;
+}
+
+IOReturn _IOUSBInterfaceInterface_WritePipe(void *self, UInt8 pipeRef, void *buf, UInt32 size) {
+    DEBUG_LOG_COLOR(FGYEL)
+    printf("\t-> pipeRef: %d\n", pipeRef);
+    hexdumpcc((unsigned char *)buf, size, FGYEL);
+    return original_IOUSBInterfaceInterface_WritePipe(self, pipeRef, buf, size);
+}
 
 #pragma mark - libATCommandStudioDynamic
 

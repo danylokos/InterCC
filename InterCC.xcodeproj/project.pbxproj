@@ -167,7 +167,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nLDID=/opt/iOSOpenDev/bin/ldid\n${LDID} -S ${BUILT_PRODUCTS_DIR}/*\nscp -o StrictHostKeyChecking=no -P 2222 ${BUILT_PRODUCTS_DIR}/libInterCC.dylib root@127.0.0.1:~/\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nLDID=/opt/iOSOpenDev/bin/ldid\nBINARY=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\n\n${LDID} -S ${BINARY}\nscp -o StrictHostKeyChecking=no -P 2222 ${BINARY} root@127.0.0.1:~/\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
