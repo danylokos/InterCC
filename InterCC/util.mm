@@ -66,15 +66,15 @@ void hexdump (unsigned char *data, unsigned int amount) {
 }
 
 void qmilog(const char* fmt, ...) {
-//    FILE *fd = fopen("/var/wireless/Library/Logs/inter.log", "a+");
+    FILE *fd = fopen("/var/wireless/Library/Logs/libInterCC.log", "a+");
     va_list args;
     va_start(args, fmt);
-//    vfprintf(fd, fmt, args);
+    vfprintf(fd, fmt, args);
     vprintf(fmt, args);
     va_end(args);
     fflush(stdout);
-//    fflush(fd);
-//    fclose(fd);
+    fflush(fd);
+    fclose(fd);
 }
 
 #endif /* defined(__dloadtool__util__) */
