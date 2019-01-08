@@ -8,146 +8,298 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "qmi.h"
 
-int main(int argc, const char * argv[]) {
-    uint8_t ctl_test[] =
-        "\x01" // marker
-        "\x0b\x00" // qmux.length
-        "\x00" // qmux.flags
-        "\x00" // qmux.service
-        "\x00" // qmux.client
-        "\x00" // qmi.control.header.flags
-        "\x0f" // qmi.control.header.transaction
-        "\x27\x00" // qmi.control.header.messaage
-        "\x00\x00" // qmi.control.header.tlv_length
-        ""; // qmi.service.tlv[]
+#include <dlfcn.h>
+#include <mach/mach.h>
 
-    uint8_t ctl_test2[] =
-        "\x01" // marker
-        "\x10\x00" // qmux.length
-        "\x00" // qmux.flags
-        "\x00" // qmux.service
-        "\x00" // qmux.client
-        "\x00" // qmi.control.header.flags
-        "\x0f" // qmi.control.header.transaction
-        "\x27\x00" // qmi.control.header.messaage
-        "\x05\x00" // qmi.control.header.tlv_length
-    
-        // qmi.service.tlv[]
-            "\x01" // qmi.service.tlv.type
-            "\x02\x00" // qmi.service.tlv.length
-            "\x03\x04"; // qmi.service.tlv.value[]
-   
-    uint8_t ctl_test3[] =
-        "\x01" // marker
-        "\x0b\x00" // qmux.length
-        "\x00" // qmux.flags
-        "\x00" // qmux.service
-        "\x00" // qmux.client
-        "\x01" // qmi.control.header.flags
-        "\x0f" // qmi.control.header.transaction
-        "\x27\x00" // qmi.control.header.messaage
-        "\x00\x00" // qmi.control.header.tlv_length
-        ""; // qmi.service.tlv[]
-    
-    uint8_t ctl_test4[] =
-        "\x01" // marker
-        "\x0b\x00" // qmux.length
-        "\x00" // qmux.flags
-        "\x00" // qmux.service
-        "\x00" // qmux.client
-        "\x02" // qmi.control.header.flags
-        "\x0f" // qmi.control.header.transaction
-        "\x27\x00" // qmi.control.header.messaage
-        "\x00\x00" // qmi.control.header.tlv_length
-        ""; // qmi.service.tlv[]
+#include "util.h"
 
-    uint8_t ctl_test5[] =
-        "\x01" // marker
-        "\x0b\x00" // qmux.length
-        "\x00" // qmux.flags
-        "\x00" // qmux.service
-        "\x00" // qmux.client
-        "\x03" // qmi.control.header.flags
-        "\x0f" // qmi.control.header.transaction
-        "\x27\x00" // qmi.control.header.messaage
-        "\x00\x00" // qmi.control.header.tlv_length
-        ""; // qmi.service.tlv[]
+#include <string>
 
-    uint8_t ctl_test6[] =
-        "\x01" // marker
-        "\x0b\x00" // qmux.length
-        "\x00" // qmux.flags
-        "\x00" // qmux.service
-        "\x00" // qmux.client
-        "\x04" // qmi.control.header.flags
-        "\x0f" // qmi.control.header.transaction
-        "\x27\x00" // qmi.control.header.messaage
-        "\x00\x00" // qmi.control.header.tlv_length
-        ""; // qmi.service.tlv[]
+#include <dispatch/dispatch.h>
+#include <xpc/xpc.h>
 
-    uint8_t nas_test[] =
-        "\x01" // marker
-        "\x30\x00" // qmux.length
-        "\x00" // qmux.flags
-        "\x03" // qmux.service
-        "\x01" // qmux.client
-        "\x04" // qmi.service.header.flags
-        "\x14\x00" // qmi.service.header.transaction
-        "\x02\x00" // qmi.service.header.messaage
-        "\x24\x00" // qmi.service.header.tlv_length
-    
-        // qmi.service.tlv[]
-            "\x13" // qmi.service.tlv.type
-            "\x02\x00" // qmi.service.tlv.length
-            "\x00\x00" // qmi.service.tlv.value[]
-    
-            "\x14"
-            "\x02\x00"
-            "\x00\x00"
-    
-            "\x15"
-            "\x02\x00"
-            "\x04\x05"
-    
-            "\x16"
-            "\x02\x00"
-            "\x00\x00"
-    
-            "\x18"
-            "\x02\x00"
-            "\x00\x00"
-    
-            "\x1b"
-            "\x03\x00"
-            "\x01\x02\x03"
-    
-            "\x1c"
-            "\x02\x00"
-            "\x00\x00";
+#include "hook_libATCommandStudioDynamic.h"
 
-    uint8_t oma_test[] =
-        "\x01"
-        "\xa0\x01"
-        "\x00"
-        "\xe2"
-        "\x05"
-    
-        "\x00"
-        "\x05\x00"
-        "\x02\xb0"
-        "\x94\x01"
-    "\x01\x91\x01\x30\x82\x01\x8d\x02\x01\x01\x30\x0b\x06\x09\x2a\x86\x48\x86\xf7\x0d\x01\x01\x05\x31\x58\x9f\x3f\x04\x27\xf0\xff\xc4\x9f\x40\x04\xe1\x00\x5a\x00\x9f\x4b\x14\x79\xe4\xda\xa4\x9c\x60\x53\x71\xf8\xda\x35\x9b\xe3\x02\xe1\x14\xc1\xb3\xe4\x8f\x9f\x87\x6d\x07\x01\x31\x83\x00\x36\x33\x63\x9f\x97\x3d\x0c\x00\x00\x00\x00\xee\xee\xee\xee\xee\xee\xee\xef\x9f\x97\x3e\x04\x00\x00\x00\x00\x9f\x97\x3f\x04\x01\x00\x00\x00\x9f\x97\x40\x04\x00\x00\x00\x00\x04\x81\x80\xc6\x89\xc8\x0a\x1e\xca\x48\x5e\x30\x55\xff\x7a\xe2\x09\x53\x9f\xa8\x73\x7c\x7e\xc2\x4f\x55\xc7\xfb\x71\xf8\xcc\xd1\xce\x19\xac\xbc\x5a\x69\x46\xfa\x51\x7e\x9c\x6d\x40\x64\xd9\x28\x50\x29\x2d\x6b\xd8\x8d\x45\x1f\x3e\xc8\x59\xda\x9d\xb5\x3f\xd9\x3d\x21\x3c\xb3\x57\xab\x6e\xd0\x5d\xaf\xb5\xa1\xd0\xfc\x7e\x1f\x10\xf2\xc6\x45\xdd\xb6\xc4\x66\xed\xe5\xb0\x95\xac\xde\xac\x32\xe7\x21\xbe\xd0\x9a\x48\x9c\x9d\x98\x4b\xa5\x72\xa1\x54\xf5\xa6\xba\xdf\xd2\xf8\xf2\xb8\xde\x7c\xef\x95\xc0\x11\x91\x7a\x9a\xd0\x36\x91\xbf\xa3\x81\x9d\x30\x0b\x06\x09\x2a\x86\x48\x86\xf7\x0d\x01\x01\x01\x03\x81\x8d\x00\x30\x81\x89\x02\x81\x81\x00\xed\x3a\x3f\x64\xd1\xe8\x20\x9c\xc1\x52\x06\x34\xef\x7e\x2f\xb2\x09\x7e\x00\x2c\x43\x43\xe7\xf8\xaa\xeb\xe6\x4a\xb3\xc0\xb6\x00\xc4\x35\x26\x70\x69\x5a\xc7\x5e\x91\x7e\x71\x12\x81\x00\x1a\xa4\x0d\xad\x34\x61\xc1\x0d\xc7\x67\x6d\x4b\x5b\x6e\x1c\xb2\x83\x36\x7d\x73\x31\x92\xda\x65\x1a\x62\x2b\xd5\x1e\x88\xc3\xcd\x64\xbe\xa6\x96\x0d\x76\x05\x62\xf0\x56\x39\x45\x38\x61\x03\xf1\x4e\xa9\x7d\x7c\x0e\xc3\xa0\xff\x14\x20\xd1\x82\xfc\x86\x06\x7e\xf0\xb3\x0f\x2c\x11\xae\xc0\x76\x56\x26\x30\x71\xa6\x92\xfc\x20\x38\xfd\x02\x03\x01\x00\x01";
+#define ATCommandStudioPath "/usr/lib/libATCommandStudioDynamic.dylib"
+#define QMIParserPath "/usr/lib/libQMIParserDynamic.dylib"
 
-    print_qmi_message(ctl_test); printf("\n\n");
-    print_qmi_message(ctl_test2); printf("\n\n");
-    print_qmi_message(ctl_test3); printf("\n\n");
-    print_qmi_message(ctl_test4); printf("\n\n");
-    print_qmi_message(ctl_test5); printf("\n\n");
-    print_qmi_message(ctl_test6); printf("\n\n");
-    print_qmi_message(nas_test); printf("\n\n");
-    print_qmi_message(oma_test);
+template <typename Type_>
+static bool dlset(Type_ &function, void* dl, const char* sym) {
+    void *value = dlsym(dl, sym);
+    if (value == NULL) {
+        printf("[-] Unable to find %s\n", sym);
+        function = NULL;
+        return false;
+    } else {
+        printf("[+] Found %s at %p\n", sym, value);
+        function = reinterpret_cast<Type_>(value);
+    }
+    return true;
+}
+
+void *load_dylib(const char *path) {
+    void *handle = dlopen(path, RTLD_NOW);
+    if (handle == NULL) {
+        printf("[-] Can't load dylib: %s\n", path);
+        return NULL;
+    }
+    printf("[+] Successfully loaded dylib: %s\n", path);
+    return handle;
+}
+
+#pragma mark -
+
+typedef enum {
+} qmi_ServiceType;
+
+typedef struct {
+} xpc_dict;
+
+typedef void(^qmiClientStateSendCallback)(void *a1);
+
+#pragma mark -
+
+#define _qmi_Client_Client "_ZN3qmi6ClientC2ERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEENS_11ServiceTypeEP16dispatch_queue_sS9_P17_xpc_connection_s"
+static MSReturn (*qmi_Client_Client)(void *a1, std::string const &a2, qmi_ServiceType a3, dispatch_queue_t a4, std::string const &a5, void *a6);
+
+#define _qmi_Client_start "_ZNK3qmi6Client5startEv"
+static MSReturn (*qmi_Client_start)(void *a1);
+
+//#define _qmi_Client_State_State "_ZN3qmi6Client5StateC2ERKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKN3xpc10connectionENS_11ServiceTypeERKN8dispatch5queueE"
+//static MSReturn (*qmi_Client_State_State)(void *a1, std::string const &a2, xpc_connection_t *a3, qmi_ServiceType a4, dispatch_queue_t *a5);
+
+//#define _qmi_Client_getSvcType "_ZNK3qmi6Client10getSvcTypeEv"
+//static unsigned int (*qmi_Client_getSvcType)(void *a1);
+
+#define _qmi_Client_setHandler_pv "_ZNK3qmi6Client10setHandlerENS0_5EventEU13block_pointerFvPvE"
+static MSReturn (*qmi_Client_setHandler_pv)(void *a1, qmi_Client_Event a2, QMIClientHandlerObjCallback);
+
+#define _qmi_Client_setHandler_v "_ZNK3qmi6Client10setHandlerENS0_5EventEU13block_pointerFvvE"
+static MSReturn (*qmi_Client_setHandler_v)(void *a1, qmi_Client_Event a2, QMIClientHandlerCallback);
+
+#define _qmi_Client_setIndHandler_sm "_ZNK3qmi6Client13setIndHandlerEtU13block_pointerFvRK13QMIServiceMsgE"
+static MSReturn (*qmi_Client_setIndHandler_sm)(void *a1, uint16_t a2, QMIServiceMessageCallback a3);
+
+#define _qmi_Client_setIndShouldWake "_ZNK3qmi6Client16setIndShouldWakeEtb"
+static MSReturn (*qmi_Client_setIndShouldWake)(void *a1, uint16_t a2, bool a3);
+
+#define _qmi_Client_State_setIndHandler_sm "_ZN3qmi6Client5State13setIndHandlerEtN8dispatch5blockIU13block_pointerFvRK13QMIServiceMsgEEE"
+static MSReturn (*qmi_Client_State_setIndHandler_sm)(void *a1, uint16_t a2, QMIClientIndHandlerMsgCallback a3);
+
+#define _qmi_Client_send "_ZNK3qmi6Client4sendERNS0_9SendProxyE"
+static MSReturn (*qmi_Client_send)(void *a1, qmi_Client_SendProxy *a2);
+
+#define _qmi_Client_State_send "_ZN3qmi6Client5State4sendERNS0_9SendProxyE"
+static MSReturn (*qmi_Client_State_send)(void *a1, qmi_Client_SendProxy *a2);
+
+#define _qmi_Client_State_send_sync "_ZN3qmi6Client5State9send_syncERKN3xpc4dictERK13QMIServiceMsgRKN8dispatch5blockIU13block_pointerFvS8_EEE"
+static MSReturn (*qmi_Client_State_send_sync)(void *a1, xpc_object_t *a2, QMIServiceMsg_struct *a3, void *a4);
+
+#define _qmi_Client_State_send_sync_dict "_ZNK3qmi6Client5State9send_syncERKN3xpc4dictE"
+static MSReturn (*qmi_Client_State_send_sync_dict)(void *a1, xpc_object_t *a2);
+
+#define _QMIServiceMsg_QMIServiceMsg "_ZN13QMIServiceMsgC2EPKvtb"
+static MSReturn (*QMIServiceMsg_QMIServiceMsg)(void *a1, void *a2, int a3, bool a4);
+
+#define _QMIServiceMsg_serialize "_ZNK13QMIServiceMsg9serializeEPvm"
+static MSReturn (*QMIServiceMsg_serialize)(QMIServiceMsg_struct *a1, void *a2, int a3);
+
+typedef struct {
+    uint16_t message;
+    uint8_t pad1[6];
+    void *f1;
+    void *f2;
+} PACKED qmi_MessageBase_struct;
+
+#define _qmi_MessageBase_MessageBase "_ZN3qmi11MessageBaseC2EPKvm"
+static MSReturn (*qmi_MessageBase_MessageBase)(void *self, void *data, unsigned int length);
+
+int testATCommandStudio() {
+    void *lib_handle = load_dylib(ATCommandStudioPath);
+    if (lib_handle) {
+        dlset(qmi_Client_Client, lib_handle, _qmi_Client_Client);
+        dlset(qmi_Client_start, lib_handle, _qmi_Client_start);
+        dlset(qmi_Client_send, lib_handle, _qmi_Client_send);
+
+        dlset(qmi_Client_State_send, lib_handle, _qmi_Client_State_send);
+        dlset(qmi_Client_State_send_sync, lib_handle, _qmi_Client_State_send_sync);
+        dlset(qmi_Client_State_send_sync_dict, lib_handle, _qmi_Client_State_send_sync_dict);
+
+        dlset(QMIServiceMsg_QMIServiceMsg, lib_handle, _QMIServiceMsg_QMIServiceMsg);
+        dlset(QMIServiceMsg_serialize, lib_handle, _QMIServiceMsg_serialize);
+        
+        dlset(qmi_Client_setHandler_pv, lib_handle, _qmi_Client_setHandler_pv);
+        dlset(qmi_Client_setHandler_v, lib_handle, _qmi_Client_setHandler_v);
+        dlset(qmi_Client_setIndHandler_sm, lib_handle, _qmi_Client_setIndHandler_sm);
+        dlset(qmi_Client_setIndShouldWake, lib_handle, _qmi_Client_setIndShouldWake);
+
+        dlset(qmi_Client_State_setIndHandler_sm, lib_handle, _qmi_Client_State_setIndHandler_sm);
+    }
+    
+    QMIServiceMsg_struct *msg = (QMIServiceMsg_struct *)malloc(sizeof(QMIServiceMsg_struct));
+//    QMIServiceMsg_struct *msg = (QMIServiceMsg_struct *)calloc(0x50, sizeof(uint8_t));
+    QMIServiceMsg_QMIServiceMsg(msg, (void *)"\x22\x00\x04\x00\x01\x01\x00\x03", 8, false);
+    printf("[+] msg: %p\n", msg);
+//    fhexdump(stdout, (uint8_t *)msg, sizeof(QMIServiceMsg_struct));;
+    
+    int qmi_length = msg->tlv_length + 2 + 2;
+    uint8_t *buffer = (uint8_t *)malloc(qmi_length * sizeof(uint8_t));
+    QMIServiceMsg_serialize(msg, buffer, qmi_length);
+    printf("[+] serialized: %p\n", buffer);
+    fhexdump(stdout, (uint8_t *)buffer, qmi_length);
+    free(buffer);
+    
+    qmi_Client_struct *client = (qmi_Client_struct *)malloc(sizeof(qmi_Client_struct));
+    dispatch_queue_t queue = dispatch_queue_create("qmiclient.gcd.queue.test", 0);
+//    dispatch_queue_t queue = dispatch_get_main_queue();
+    qmi_Client_Client((void *)client, std::string("TestClient_a2"), (qmi_ServiceType)0x00, queue, std::string("TestClient_a5"), NULL);
+    printf("[+] client: %p\n", client);
+    printf("[+] state: %p\n", client->state);
+    
+    qmi_Client_setHandler_pv(client, 0x1, ^(void *) { printf("[+] QMIClientHandlerObjCallback 0x1\n"); });
+    qmi_Client_setHandler_pv(client, 0x2, ^(void *) { printf("[+] QMIClientHandlerObjCallback 0x2\n"); });
+    qmi_Client_setHandler_pv(client, 0x4, ^(void *) { printf("[+] QMIClientHandlerObjCallback 0x4\n"); });
+    qmi_Client_setHandler_pv(client, 0x5, ^(void *obj) {
+        printf("[+] QMIClientHandlerObjCallback 0x5\n");
+        fhexdump(stdout, (uint8_t *)obj, 16);
+    });
+    printf("[+] qmi_Client_setHandler_pv\n");
+
+    QMIClientIndHandlerMsgCallback cb = ^(QMIServiceMsg_struct *msg) {
+        printf("[+] QMIServiceMessageCallback\n");
+    };
+    qmi_Client_setIndHandler_sm(client, 0x0022, cb);
+    printf("[+] qmi_Client_setIndHandler_sm\n");
+    
+    qmi_Client_setIndShouldWake(client, 0x0022, 1);
+    printf("[+] qmi_Client_setIndShouldWake\n");
+
+    qmi_Client_start((void *)client);
+    printf("[+] start\n");
+
+    const char *keys[] = {
+//        "msg_id",
+        "send_qmi_message",
+        "send_timeout_ms"
+    };
+    
+//    xpc_object_t msg_id = xpc_int64_create(10);
+    xpc_object_t qmi_message = xpc_data_create("\x22\x00\x04\x00\x01\x01\x00\x03", 8);
+    xpc_object_t timeout_ms = xpc_int64_create(25000);
+    const xpc_object_t values[] = {
+//        msg_id,
+        qmi_message,
+        timeout_ms
+    };
+    __block xpc_object_t dict = xpc_dictionary_create(keys, values, 2);
+
+    uint8_t *(^sync_cb)(uint8_t *a1, uint8_t *a2) = ^(uint8_t *a1, uint8_t *a2) {
+        printf("[+] QMIServiceMessageCallback\n");
+        uint8_t *result = (a1 + 32);
+        return (result + 56);
+    };
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        qmi_Client_State_send_sync((void *)client->state, &dict, msg, (void *)&sync_cb);
+//        printf("[+] qmi_Client_State_send_sync()\n");
+//    });
+    
+//    qmi_Client_State_send_sync_dict((void *)client->state, &dict);
+//    printf("[+] qmi_Client_State_send_sync_dict()\n");
+    
+    qmi_Client_SendProxy *proxy = (qmi_Client_SendProxy *)calloc(0x100, sizeof(uint8_t));
+    proxy->client = client;
+    proxy->msg = msg;
+    proxy->f3 = 0x61a8;
+    proxy->f4 = 0x0001;
+    proxy->f5 = NULL;
+    proxy->f6 = NULL;
+//    printf("[+] proxy: %p\n", proxy);
+//    fhexdump(stdout, (uint8_t *)proxy, sizeof(qmi_Client_SendProxy));
+
+    qmi_Client_State_send((void *)client->state, proxy);
+    printf("[+] qmi_Client_State_send()\n");
+
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        qmi_Client_send(client, proxy);
+//        printf("[+] qmi_Client_send()\n");
+//    });
+
+//    printf("[+] proxy: %p\n", proxy);
+//    fhexdump(stdout, (uint8_t *)proxy, sizeof(qmi_Client_SendProxy));
+
+    return 0;
+}
+
+#pragma mark -
+
+//typedef struct QMux QMux;
+//typedef unsigned int QMIClientCallback;
+//
+//#define _QMIClient_requestClient "_ZN9QMIClient13requestClientERKNSt3__112basic_stringIcNS0_11char_traitsIcEENS0_9allocatorIcEEEEN3qmi11ServiceTypeERK4QMuxP17QMIClientCallbackbb"
+//static MSReturn (*QMIClient_requestClient)(void *a1, std::string const &a2, uint8_t a3, QMux const *a4, QMIClientCallback *a5, bool a6, bool a7);
+//
+//int testATCommandStudio2() {
+//    void *lib_handle = load_dylib(ATCommandStudioPath);
+//    if (lib_handle) {
+//        dlset(QMIClient_requestClient, lib_handle, _QMIClient_requestClient);
+//    }
+//
+//    void *client = (void *)calloc(100, sizeof(uint8_t));
+//    QMIClient_requestClient(client, "TestClient", 0x0c, NULL, 0x0, true, true);
+//    printf("[+] QMIClient_requestClient: %p", client);
+//    fhexdump(stdout, (uint8_t *)client, 100);
+//
+//    return 0;
+//}
+
+#pragma mark -
+
+int testQMIParser() {
+    void *lib_handle = load_dylib(QMIParserPath);
+    if (lib_handle) {
+        dlset(qmi_MessageBase_MessageBase, lib_handle, _qmi_MessageBase_MessageBase);
+    }
+    
+    if (qmi_MessageBase_MessageBase == NULL) {
+        return -1;
+    }
+    
+    size_t size = 0x18;
+    qmi_MessageBase_struct *tmp = (qmi_MessageBase_struct *)calloc(size, sizeof(uint8_t));
+    printf("[+] memory addr: %p\n", tmp);
+    qmi_MessageBase_MessageBase(tmp, (void *)"\x27\x00\x07\x00\x02\x04\x00\x00\x00\x00\x00", 11);
+    if (tmp == NULL) {
+        printf("[-] Can't create object\n");
+        return -1;
+    }
+    printf("[+] Success\n");
+    
+//    printf("[*] hexdump: %p\n", tmp);
+//    fhexdump(stdout, (uint8_t *)tmp, size);
+    
+    printf("[*] message: %04x\n", tmp->message);
+    printf("[*] f1: %p\n", tmp->f1);
+    printf("[*] f2: %p\n", tmp->f2);
+    
+//    printf("[*] hexdump: %p\n", tmp->f1);
+//    fhexdump(stdout, (uint8_t *)tmp->f1, 0x40);
+//
+//    printf("[*] hexdump: %p\n", tmp->f2);
+//    fhexdump(stdout, (uint8_t *)tmp->f2, 0x40);
     
     return 0;
 }
+
+int main(int argc, const char *argv[]) {
+    NSRunLoop *runLoop;
+    @autoreleasepool {
+        runLoop = [NSRunLoop currentRunLoop];
+        
+        testATCommandStudio();
+        
+        while ([runLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
+    }
+    return 0;
+}
+

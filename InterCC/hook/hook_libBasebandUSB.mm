@@ -17,40 +17,40 @@
 
 #define PACKED __attribute__((packed))
 
-//#define usb_interface_control_init _ZN3usb9interface7control4initEv
-//extern "C" unsigned int usb_interface_control_init(void *a1);
-//static unsigned int (*orig_usb_interface_control_init)(void *a1);
-//unsigned int _usb_interface_control_init(void *a1) {
-//    DEBUG_LOG_RED
-//    return orig_usb_interface_control_init(a1);
-//} //DYLD_INTERPOSE(_usb_interface_control_init, usb_interface_control_init)
+#define usb_interface_control_init _ZN3usb9interface7control4initEv
+extern "C" MSReturn usb_interface_control_init(void *a1);
+static MSReturn (*orig_usb_interface_control_init)(void *a1);
+MSReturn _usb_interface_control_init(void *a1) {
+    DEBUG_LOG_RED
+    return orig_usb_interface_control_init(a1);
+}
 
 typedef struct {
-} /*PACKED*/ usb_interface_control_parameters;
+} usb_interface_control_parameters;
 
 #define usb_interface_control_create _ZN3usb9interface7control6createERKNS1_10parametersE
-extern "C" unsigned int usb_interface_control_create(void *a1, usb_interface_control_parameters const &a2);
-static unsigned int (*orig_usb_interface_control_create)(void *a1, usb_interface_control_parameters const &a2);
-unsigned int _usb_interface_control_create(void *a1, usb_interface_control_parameters const &a2) {
+extern "C" MSReturn usb_interface_control_create(void *a1, usb_interface_control_parameters const &a2);
+static MSReturn (*orig_usb_interface_control_create)(void *a1, usb_interface_control_parameters const &a2);
+MSReturn _usb_interface_control_create(void *a1, usb_interface_control_parameters const &a2) {
     DEBUG_LOG_SYNC(
-        DEBUG_LOG_COLOR(FGYEL)
-        qmilog("\t-> a2: %p\n", &a2);
-        //    hexdumpct((uint8_t *)&a2, 0x60);
+                   DEBUG_LOG_COLOR(FGYEL)
+                   qmilog("\t-> a2: %p\n", &a2);
+                   hexdumpct((uint8_t *)&a2, 0x100);
     )
     return orig_usb_interface_control_create(a1, a2);
-} //DYLD_INTERPOSE(_func_name, func_name)
+}
 
 #define usb_interface_control_control _ZN3usb9interface7controlC2ERKNS1_10parametersE
-extern "C" unsigned int usb_interface_control_control(void *a1, usb_interface_control_parameters const &a2);
-static unsigned int (*orig_usb_interface_control_control)(void *a1, usb_interface_control_parameters const &a2);
-unsigned int _usb_interface_control_control(void *a1, usb_interface_control_parameters const &a2) {
+extern "C" MSReturn usb_interface_control_control(void *a1, usb_interface_control_parameters const &a2);
+static MSReturn (*orig_usb_interface_control_control)(void *a1, usb_interface_control_parameters const &a2);
+MSReturn _usb_interface_control_control(void *a1, usb_interface_control_parameters const &a2) {
     DEBUG_LOG_SYNC(
-        DEBUG_LOG_COLOR(FGYEL)
-        qmilog("\t-> a2: %p\n", &a2);
-        //    hexdumpct((uint8_t *)&a2, 0x60);
+    DEBUG_LOG_COLOR(FGYEL)
+    qmilog("\t-> a2: %p\n", &a2);
+    hexdumpct((uint8_t *)&a2, 0x100);
     )
     return orig_usb_interface_control_control(a1, a2);
-} //DYLD_INTERPOSE(_func_name, func_name)
+}
 
 #define usb_interface_control_engage _ZN3usb9interface7control6engageEv
 extern "C" unsigned int usb_interface_control_engage(void *a1);
@@ -70,19 +70,19 @@ unsigned int _usb_interface_control_engageInterface(void *a1) {
 
 typedef struct {
     
-} PACKED usb_interface_control;
+} /*PACKED*/ usb_interface_control;
 
 #define usb_interface_control_engageInterface_sync _ZN3usb9interface7control20engageInterface_syncENSt3__18weak_ptrIS1_EE
 extern "C" unsigned int usb_interface_control_engageInterface_sync(void *a1, std::weak_ptr<usb_interface_control> a2);
 static unsigned int (*orig_usb_interface_control_engageInterface_sync)(void *a1, std::weak_ptr<usb_interface_control> a2);
 unsigned int _usb_interface_control_engageInterface_sync(void *a1, std::weak_ptr<usb_interface_control> a2) {
-//    DEBUG_LOG_SYNC(
+    DEBUG_LOG_SYNC(
     DEBUG_LOG_COLOR(FGYEL)
-//    std::shared_ptr<usb_interface_control> sp;
-//    sp = a2.lock();
-//    qmilog("\t-> sp1: %p\n", sp.get());
-//    hexdumpct((uint8_t *)sp.get(), 0x100);
-//   )
+    std::shared_ptr<usb_interface_control> sp;
+    sp = a2.lock();
+    qmilog("\t-> sp1: %p\n", sp.get());
+    hexdumpct((uint8_t *)sp.get(), 0x100);
+    )
     return orig_usb_interface_control_engageInterface_sync(a1, a2);
 } //DYLD_INTERPOSE(_func_name, func_name)
 
@@ -260,33 +260,81 @@ unsigned int _usb_interface_control_teardownInterface_sync(void *a1, void *a2) {
 #pragma mark -
 
 void hook_libBasebandUSB() {
-////    MSHookFunction((void *)&usb_interface_control_init, (void *)&_usb_interface_control_init, (void **)&orig_usb_interface_control_init);
-//    MSHookFunction((void *)&usb_interface_control_create, (void *)&_usb_interface_control_create, (void **)&orig_usb_interface_control_create);
-//    MSHookFunction((void *)&usb_interface_control_control, (void *)&_usb_interface_control_control, (void **)&orig_usb_interface_control_control);
-//    MSHookFunction((void *)&usb_interface_control_engage, (void *)&_usb_interface_control_engage, (void **)&orig_usb_interface_control_engage);
-//    MSHookFunction((void *)&usb_interface_control_engageInterface, (void *)&_usb_interface_control_engageInterface, (void **)&orig_usb_interface_control_engageInterface);
-//    MSHookFunction((void *)&usb_interface_control_engageInterface_sync, (void *)&_usb_interface_control_engageInterface_sync, (void **)&orig_usb_interface_control_engageInterface_sync);
-//    MSHookFunction((void *)&usb_interface_control_write, (void *)&_usb_interface_control_write, (void **)&orig_usb_interface_control_write);
-//    MSHookFunction((void *)&usb_interface_control_writeInterface, (void *)&_usb_interface_control_writeInterface, (void **)&orig_usb_interface_control_writeInterface);
+//    MSHookFunction((void *)&usb_interface_control_init,
+//                   (void *)&_usb_interface_control_init,
+//                   (void **)&orig_usb_interface_control_init);
 
-//    MSHookFunction((void *)&usb_interface_control_queueBulkReadCompletion_sync, (void *)&_usb_interface_control_queueBulkReadCompletion_sync, (void **)&orig_usb_interface_control_queueBulkReadCompletion_sync);
-//    MSHookFunction((void *)&usb_interface_control_queueBulkWriteCompletion_sync, (void *)&_usb_interface_control_queueBulkWriteCompletion_sync, (void **)&orig_usb_interface_control_queueBulkWriteCompletion_sync);
+//    MSHookFunction((void *)&usb_interface_control_create,
+//                   (void *)&_usb_interface_control_create,
+//                   (void **)&orig_usb_interface_control_create);
+//    MSHookFunction((void *)&usb_interface_control_control,
+//                   (void *)&_usb_interface_control_control,
+//                   (void **)&orig_usb_interface_control_control);
+    /*
+    MSHookFunction((void *)&usb_interface_control_engage,
+                   (void *)&_usb_interface_control_engage,
+                   (void **)&orig_usb_interface_control_engage);
+    MSHookFunction((void *)&usb_interface_control_engageInterface,
+                   (void *)&_usb_interface_control_engageInterface,
+                   (void **)&orig_usb_interface_control_engageInterface);
+    MSHookFunction((void *)&usb_interface_control_engageInterface_sync,
+                   (void *)&_usb_interface_control_engageInterface_sync,
+                   (void **)&orig_usb_interface_control_engageInterface_sync);
+     */
+    
+    /*
+    MSHookFunction((void *)&usb_interface_control_write,
+                   (void *)&_usb_interface_control_write,
+                   (void **)&orig_usb_interface_control_write);
+    MSHookFunction((void *)&usb_interface_control_writeInterface,
+                   (void *)&_usb_interface_control_writeInterface,
+                   (void **)&orig_usb_interface_control_writeInterface);
+     */
+    
+    /*
+    MSHookFunction((void *)&usb_interface_control_queueBulkReadCompletion_sync,
+                   (void *)&_usb_interface_control_queueBulkReadCompletion_sync,
+                   (void **)&orig_usb_interface_control_queueBulkReadCompletion_sync);
+    MSHookFunction((void *)&usb_interface_control_queueBulkWriteCompletion_sync,
+                   (void *)&_usb_interface_control_queueBulkWriteCompletion_sync,
+                   (void **)&orig_usb_interface_control_queueBulkWriteCompletion_sync);
+     */
 
-//    MSHookFunction((void *)&usb_interface_control_dispatchRead_sync, (void *)&_usb_interface_control_dispatchRead_sync, (void **)&orig_usb_interface_control_dispatchRead_sync);
+    /*
+    MSHookFunction((void *)&usb_interface_control_dispatchRead_sync,
+                   (void *)&_usb_interface_control_dispatchRead_sync,
+                   (void **)&orig_usb_interface_control_dispatchRead_sync);
+     */
     
     MSHookFunction((void *)&usb_interface_control_queueControlReadCompletion_sync,
                    (void *)&_usb_interface_control_queueControlReadCompletion_sync,
                    (void **)&orig_usb_interface_control_queueControlReadCompletion_sync);
-    
+
     MSHookFunction((void *)&usb_interface_control_queueControlWriteCompletion_sync,
                    (void *)&_usb_interface_control_queueControlWriteCompletion_sync,
                    (void **)&orig_usb_interface_control_queueControlWriteCompletion_sync);
     
-//    MSHookFunction((void *)&usb_interface_control_ioCompletionInternal_sync, (void *)&_usb_interface_control_ioCompletionInternal_sync, (void **)&orig_usb_interface_control_ioCompletionInternal_sync);
+    /*
+    MSHookFunction((void *)&usb_interface_control_ioCompletionInternal_sync,
+                   (void *)&_usb_interface_control_ioCompletionInternal_sync,
+                   (void **)&orig_usb_interface_control_ioCompletionInternal_sync);
+     */
 
-//    MSHookFunction((void *)&usb_interface_control_recover, (void *)&_usb_interface_control_recover, (void **)&orig_usb_interface_control_recover);
-//    MSHookFunction((void *)&usb_interface_control_recoverInterface, (void *)&_usb_interface_control_recoverInterface, (void **)&orig_usb_interface_control_recoverInterface);
-//    MSHookFunction((void *)&usb_interface_control_teardown, (void *)&_usb_interface_control_teardown, (void **)&orig_usb_interface_control_teardown);
-//    MSHookFunction((void *)&usb_interface_control_teardownInterface, (void *)&_usb_interface_control_teardownInterface, (void **)&orig_usb_interface_control_teardownInterface);
-//    MSHookFunction((void *)&usb_interface_control_teardownInterface_sync, (void *)&_usb_interface_control_teardownInterface_sync, (void **)&orig_usb_interface_control_teardownInterface_sync);
+    /*
+    MSHookFunction((void *)&usb_interface_control_recover,
+                   (void *)&_usb_interface_control_recover,
+                   (void **)&orig_usb_interface_control_recover);
+    MSHookFunction((void *)&usb_interface_control_recoverInterface,
+                   (void *)&_usb_interface_control_recoverInterface,
+                   (void **)&orig_usb_interface_control_recoverInterface);
+    MSHookFunction((void *)&usb_interface_control_teardown,
+                   (void *)&_usb_interface_control_teardown,
+                   (void **)&orig_usb_interface_control_teardown);
+    MSHookFunction((void *)&usb_interface_control_teardownInterface,
+                   (void *)&_usb_interface_control_teardownInterface,
+                   (void **)&orig_usb_interface_control_teardownInterface);
+    MSHookFunction((void *)&usb_interface_control_teardownInterface_sync,
+                   (void *)&_usb_interface_control_teardownInterface_sync,
+                   (void **)&orig_usb_interface_control_teardownInterface_sync);
+     */
 }

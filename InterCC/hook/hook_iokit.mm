@@ -342,8 +342,8 @@ _IOConnectCallAsyncStructMethod(mach_port_t connection,
 static HRESULT (*orig_IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface)(void *thisPointer, REFIID iid, LPVOID *ppv);
 HRESULT _IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv);
 
-static HRESULT (*orig_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface)(void *thisPointer, REFIID iid, LPVOID *ppv);
-HRESULT _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv);
+//static HRESULT (*orig_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface)(void *thisPointer, REFIID iid, LPVOID *ppv);
+//HRESULT _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv);
 
 static kern_return_t
 (*orig_IOCreatePlugInInterfaceForService)(io_service_t service,
@@ -369,13 +369,14 @@ _IOCreatePlugInInterfaceForService(io_service_t service,
             orig_IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface = (**theInterface)->QueryInterface;
             (**theInterface)->QueryInterface = _IOCFPlugInInterface_IOUSBDeviceUserClient_QueryInterface;
         }
-    } else if (CFStringCompare(CFUUIDCreateString(kCFAllocatorDefault, pluginType),
-                               CFUUIDCreateString(kCFAllocatorDefault, kIOUSBInterfaceUserClientTypeID), 0) == kCFCompareEqualTo) {
-        if ((**theInterface)->QueryInterface != _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface) {
-            orig_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface = (**theInterface)->QueryInterface;
-            (**theInterface)->QueryInterface = _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface;
-        }
     }
+//    else if (CFStringCompare(CFUUIDCreateString(kCFAllocatorDefault, pluginType),
+//                               CFUUIDCreateString(kCFAllocatorDefault, kIOUSBInterfaceUserClientTypeID), 0) == kCFCompareEqualTo) {
+//        if ((**theInterface)->QueryInterface != _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface) {
+//            orig_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface = (**theInterface)->QueryInterface;
+//            (**theInterface)->QueryInterface = _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface;
+//        }
+//    }
     return result;
 } //DYLD_INTERPOSE(_IOCreatePlugInInterfaceForService, IOCreatePlugInInterfaceForService)
 
@@ -474,11 +475,11 @@ IOReturn _IOUSBInterfaceInterface_ReadPipe(void *self, UInt8 pipeRef, void *buf,
 static IOReturn (*orig_IOUSBInterfaceInterface_WritePipe)(void *self, UInt8 pipeRef, void *buf, UInt32 size);
 IOReturn _IOUSBInterfaceInterface_WritePipe(void *self, UInt8 pipeRef, void *buf, UInt32 size);
 
-HRESULT _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv) {
-    DEBUG_LOG_COLOR(FGYEL)
-    HRESULT result = orig_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(thisPointer, iid, ppv);
-    IOUSBInterfaceStruct *iface = **(IOUSBInterfaceStruct ***)ppv;
-    
+//HRESULT _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(void *thisPointer, REFIID iid, LPVOID *ppv) {
+//    DEBUG_LOG_COLOR(FGYEL)
+//    HRESULT result = orig_IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(thisPointer, iid, ppv);
+//    IOUSBInterfaceStruct *iface = **(IOUSBInterfaceStruct ***)ppv;
+//
 //    if (iface->USBInterfaceOpen != _IOUSBInterfaceInterface_USBInterfaceOpen) {
 //        orig_IOUSBInterfaceInterface_USBInterfaceOpen = iface->USBInterfaceOpen;
 //        iface->USBInterfaceOpen = _IOUSBInterfaceInterface_USBInterfaceOpen;
@@ -488,29 +489,29 @@ HRESULT _IOCFPlugInInterface_IOUSBInterfaceUserClient_QueryInterface(void *thisP
 //        orig_IOUSBInterfaceInterface_USBInterfaceClose = iface->USBInterfaceClose;
 //        iface->USBInterfaceClose = _IOUSBInterfaceInterface_USBInterfaceClose;
 //    }
-
+//
 //    if (iface->GetInterfaceNumber != _IOUSBInterfaceInterface_GetInterfaceNumber) {
 //        orig_IOUSBInterfaceInterface_GetInterfaceNumber = iface->GetInterfaceNumber;
 //        iface->GetInterfaceNumber = _IOUSBInterfaceInterface_GetInterfaceNumber;
 //    }
-    
-    if (iface->ControlRequest != _IOUSBInterfaceInterface_ControlRequest) {
-        orig_IOUSBInterfaceInterface_ControlRequest = iface->ControlRequest;
-        iface->ControlRequest = _IOUSBInterfaceInterface_ControlRequest;
-    }
-    
-    if (iface->ReadPipe != _IOUSBInterfaceInterface_ReadPipe) {
-        orig_IOUSBInterfaceInterface_ReadPipe = iface->ReadPipe;
-        iface->ReadPipe = _IOUSBInterfaceInterface_ReadPipe;
-    }
-    
-    if (iface->WritePipe != _IOUSBInterfaceInterface_WritePipe) {
-        orig_IOUSBInterfaceInterface_WritePipe = iface->WritePipe;
-        iface->WritePipe = _IOUSBInterfaceInterface_WritePipe;
-    }
-    
-    return result;
-}
+//
+//    if (iface->ControlRequest != _IOUSBInterfaceInterface_ControlRequest) {
+//        orig_IOUSBInterfaceInterface_ControlRequest = iface->ControlRequest;
+//        iface->ControlRequest = _IOUSBInterfaceInterface_ControlRequest;
+//    }
+//
+//    if (iface->ReadPipe != _IOUSBInterfaceInterface_ReadPipe) {
+//        orig_IOUSBInterfaceInterface_ReadPipe = iface->ReadPipe;
+//        iface->ReadPipe = _IOUSBInterfaceInterface_ReadPipe;
+//    }
+//
+//    if (iface->WritePipe != _IOUSBInterfaceInterface_WritePipe) {
+//        orig_IOUSBInterfaceInterface_WritePipe = iface->WritePipe;
+//        iface->WritePipe = _IOUSBInterfaceInterface_WritePipe;
+//    }
+//
+//    return result;
+//}
 
 #pragma mark - IOUSBDeviceInterface
 
@@ -605,11 +606,11 @@ void hook_iokit() {
     MSHookFunction((void *)&IOCreatePlugInInterfaceForService, (void *)&_IOCreatePlugInInterfaceForService, (void **)&orig_IOCreatePlugInInterfaceForService);
     MSHookFunction((void *)&IODestroyPlugInInterface, (void *)&_IODestroyPlugInInterface, (void **)&orig_IODestroyPlugInInterface);
 
-//    MSHookFunction((void *)&IOConnectCallMethod, (void *)&_IOConnectCallMethod, (void **)&orig_IOConnectCallMethod);
-//    MSHookFunction((void *)&IOConnectCallScalarMethod, (void *)&_IOConnectCallScalarMethod, (void **)&orig_IOConnectCallScalarMethod);
-//    MSHookFunction((void *)&IOConnectCallStructMethod, (void *)&_IOConnectCallStructMethod, (void **)&orig_IOConnectCallStructMethod);
+    MSHookFunction((void *)&IOConnectCallMethod, (void *)&_IOConnectCallMethod, (void **)&orig_IOConnectCallMethod);
+    MSHookFunction((void *)&IOConnectCallScalarMethod, (void *)&_IOConnectCallScalarMethod, (void **)&orig_IOConnectCallScalarMethod);
+    MSHookFunction((void *)&IOConnectCallStructMethod, (void *)&_IOConnectCallStructMethod, (void **)&orig_IOConnectCallStructMethod);
 
-//    MSHookFunction((void *)&IOConnectCallAsyncMethod, (void *)&_IOConnectCallAsyncMethod, (void **)&orig_IOConnectCallAsyncMethod);
-//    MSHookFunction((void *)&IOConnectCallAsyncScalarMethod, (void *)&_IOConnectCallAsyncScalarMethod, (void **)&orig_IOConnectCallAsyncScalarMethod);
-//    MSHookFunction((void *)&IOConnectCallAsyncStructMethod, (void *)&_IOConnectCallAsyncStructMethod, (void **)&orig_IOConnectCallAsyncStructMethod);
+    MSHookFunction((void *)&IOConnectCallAsyncMethod, (void *)&_IOConnectCallAsyncMethod, (void **)&orig_IOConnectCallAsyncMethod);
+    MSHookFunction((void *)&IOConnectCallAsyncScalarMethod, (void *)&_IOConnectCallAsyncScalarMethod, (void **)&orig_IOConnectCallAsyncScalarMethod);
+    MSHookFunction((void *)&IOConnectCallAsyncStructMethod, (void *)&_IOConnectCallAsyncStructMethod, (void **)&orig_IOConnectCallAsyncStructMethod);
 }

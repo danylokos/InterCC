@@ -9,6 +9,8 @@
 #ifndef usblogger_util_h
 #define usblogger_util_h
 
+typedef void * MSReturn;
+
 #include <stdio.h>
 #include <Foundation/Foundation.h>
 
@@ -35,6 +37,8 @@
 extern dispatch_queue_t log_queue;
 
 #define DEBUG_LOG_SYNC(...) dispatch_sync(log_queue, ^{ __VA_ARGS__ });
+
+#define DEBUG_LOG_ASYNC(...) dispatch_async(log_queue, ^{ __VA_ARGS__ });
 
 void init_utils();
 

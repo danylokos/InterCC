@@ -45,9 +45,9 @@ __attribute__((constructor)) void lib_main() {
     init_utils();
     qmilog("%slibInter injected%s\n", BGRED, BGNRM);
 
-//    hook_stdlib();
+    hook_stdlib();
 //    hook_iokit();
-    hook_libBasebandUSB();
+//    hook_libBasebandUSB();
 //    hook_libATCommandStudioDynamic();
 //    hook_libQMIParserDynamic();
 //    hook_libBasebandManager();
