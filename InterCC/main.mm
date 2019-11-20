@@ -26,7 +26,20 @@
  DYLD_INSERT_LIBRARIES=/Library/MobileSubstrate/MobileSubstrate.dylib \
  /System/Library/Frameworks/CoreTelephony.framework/Support/CommCenter
 */
+
+/*
  
+ ssh -o StrictHostKeyChecking=no -l root -p 2222 127.0.0.1
+ 
+ /Library/MobileSubstrate/DynamicLibraries/libInterCC.plist
+ 
+ launchctl unload /System/Library/LaunchDaemons/com.apple.CommCenter.plist && \
+    launchctl load /System/Library/LaunchDaemons/com.apple.CommCenter.plist
+ 
+ tail -f /var/tmp/libInterCC.log
+ 
+ */
+
 #include "dyld-interposing.h"
 
 #include "util.h"
