@@ -1,0 +1,592 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		772033B721B57B0100807168 /* util.mm in Sources */ = {isa = PBXBuildFile; fileRef = 772033B121B57B0100807168 /* util.mm */; };
+		772033B821B57B0100807168 /* dyld-interposing.h in Headers */ = {isa = PBXBuildFile; fileRef = 772033B221B57B0100807168 /* dyld-interposing.h */; };
+		772033B921B57B0100807168 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 772033B321B57B0100807168 /* main.mm */; };
+		772033BA21B57B0100807168 /* colors.h in Headers */ = {isa = PBXBuildFile; fileRef = 772033B421B57B0100807168 /* colors.h */; };
+		772033BB21B57B0100807168 /* qmi.h in Headers */ = {isa = PBXBuildFile; fileRef = 772033B521B57B0100807168 /* qmi.h */; };
+		772033BC21B57B0100807168 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 772033B621B57B0100807168 /* util.h */; };
+		7760719021D38E0C00114119 /* libsubstrate.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7760718F21D38E0C00114119 /* libsubstrate.dylib */; };
+		776D062C21E4A5390001F3B7 /* hook_iokit.h in Headers */ = {isa = PBXBuildFile; fileRef = 776D062A21E4A5390001F3B7 /* hook_iokit.h */; };
+		776D062D21E4A5390001F3B7 /* hook_iokit.mm in Sources */ = {isa = PBXBuildFile; fileRef = 776D062B21E4A5390001F3B7 /* hook_iokit.mm */; };
+		776D063021E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.h in Headers */ = {isa = PBXBuildFile; fileRef = 776D062E21E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.h */; };
+		776D063121E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.mm in Sources */ = {isa = PBXBuildFile; fileRef = 776D062F21E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.mm */; };
+		776D063421E4A7B10001F3B7 /* hook_libQMIParserDynamic.h in Headers */ = {isa = PBXBuildFile; fileRef = 776D063221E4A7B10001F3B7 /* hook_libQMIParserDynamic.h */; };
+		776D063521E4A7B10001F3B7 /* hook_libQMIParserDynamic.mm in Sources */ = {isa = PBXBuildFile; fileRef = 776D063321E4A7B10001F3B7 /* hook_libQMIParserDynamic.mm */; };
+		776D063821E4A8FC0001F3B7 /* hook_libBasebandUSB.h in Headers */ = {isa = PBXBuildFile; fileRef = 776D063621E4A8FC0001F3B7 /* hook_libBasebandUSB.h */; };
+		776D063921E4A8FC0001F3B7 /* hook_libBasebandUSB.mm in Sources */ = {isa = PBXBuildFile; fileRef = 776D063721E4A8FC0001F3B7 /* hook_libBasebandUSB.mm */; };
+		776D063C21E4AA400001F3B7 /* hook_stdlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 776D063A21E4AA400001F3B7 /* hook_stdlib.h */; };
+		776D063D21E4AA400001F3B7 /* hook_stdlib.mm in Sources */ = {isa = PBXBuildFile; fileRef = 776D063B21E4AA400001F3B7 /* hook_stdlib.mm */; };
+		776D064021E4AB210001F3B7 /* hook_libBasebandManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 776D063E21E4AB210001F3B7 /* hook_libBasebandManager.h */; };
+		776D064121E4AB210001F3B7 /* hook_libBasebandManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 776D063F21E4AB210001F3B7 /* hook_libBasebandManager.mm */; };
+		776D064421E4AB8D0001F3B7 /* hook_XPC.h in Headers */ = {isa = PBXBuildFile; fileRef = 776D064221E4AB8D0001F3B7 /* hook_XPC.h */; };
+		776D064521E4AB8D0001F3B7 /* hook_XPC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 776D064321E4AB8D0001F3B7 /* hook_XPC.mm */; };
+		776EBE9C21DFAF36007CB6D0 /* flip.h in Headers */ = {isa = PBXBuildFile; fileRef = 776EBE9A21DFAF36007CB6D0 /* flip.h */; };
+		776EBE9D21DFAF36007CB6D0 /* flip.c in Sources */ = {isa = PBXBuildFile; fileRef = 776EBE9B21DFAF36007CB6D0 /* flip.c */; };
+		776EBE9E21DFB088007CB6D0 /* qmi.mm in Sources */ = {isa = PBXBuildFile; fileRef = 77E5B47921C13393006BE362 /* qmi.mm */; };
+		776EBE9F21DFB0B9007CB6D0 /* util.mm in Sources */ = {isa = PBXBuildFile; fileRef = 772033B121B57B0100807168 /* util.mm */; };
+		7776BA9D21B1444400A982DA /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7776BA9C21B1444400A982DA /* IOKit.framework */; };
+		7776BA9F21B1444C00A982DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7776BA9E21B1444C00A982DA /* Foundation.framework */; };
+		7786ADCF23854C4200485F53 /* libATCommandStudioDynamic.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786ADCC23854C4200485F53 /* libATCommandStudioDynamic.dylib */; };
+		7786ADD023854C4200485F53 /* libBasebandUSB.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786ADCD23854C4200485F53 /* libBasebandUSB.dylib */; };
+		7786ADD123854C4200485F53 /* libQMIParserDynamic.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786ADCE23854C4200485F53 /* libQMIParserDynamic.dylib */; };
+		7786ADD22385555E00485F53 /* libATCommandStudioDynamic.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786ADCC23854C4200485F53 /* libATCommandStudioDynamic.dylib */; };
+		7786ADD32385555E00485F53 /* libBasebandUSB.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786ADCD23854C4200485F53 /* libBasebandUSB.dylib */; };
+		7786ADD42385555E00485F53 /* libQMIParserDynamic.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786ADCE23854C4200485F53 /* libQMIParserDynamic.dylib */; };
+		77E5B47A21C13393006BE362 /* qmi.mm in Sources */ = {isa = PBXBuildFile; fileRef = 77E5B47921C13393006BE362 /* qmi.mm */; };
+		77E5B48221C15608006BE362 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 77E5B48121C15608006BE362 /* main.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		77E5B47D21C15608006BE362 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		772033B121B57B0100807168 /* util.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = util.mm; sourceTree = "<group>"; };
+		772033B221B57B0100807168 /* dyld-interposing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
+		772033B321B57B0100807168 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		772033B421B57B0100807168 /* colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colors.h; sourceTree = "<group>"; };
+		772033B521B57B0100807168 /* qmi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qmi.h; sourceTree = "<group>"; };
+		772033B621B57B0100807168 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		7746CBA22225741B008DF625 /* libATCommandStudioDynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libATCommandStudioDynamic.dylib; path = ../../rootfs/iphone6_ios90/System/Library/Caches/com.apple.dyld/extracted64/libATCommandStudioDynamic.dylib; sourceTree = "<group>"; };
+		7746CBA422257703008DF625 /* libBasebandUSB.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBasebandUSB.dylib; path = ../../rootfs/iphone6_ios90/System/Library/Caches/com.apple.dyld/extracted64/libBasebandUSB.dylib; sourceTree = "<group>"; };
+		7746CBA62226A006008DF625 /* libQMIParserDynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libQMIParserDynamic.dylib; path = ../../rootfs/iphone6_ios90/System/Library/Caches/com.apple.dyld/extracted64/libQMIParserDynamic.dylib; sourceTree = "<group>"; };
+		7760718F21D38E0C00114119 /* libsubstrate.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsubstrate.dylib; path = ../../tools/saurik/mobilesubstrate/data/usr/lib/libsubstrate.dylib; sourceTree = "<group>"; };
+		776D062A21E4A5390001F3B7 /* hook_iokit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hook_iokit.h; sourceTree = "<group>"; };
+		776D062B21E4A5390001F3B7 /* hook_iokit.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = hook_iokit.mm; sourceTree = "<group>"; };
+		776D062E21E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hook_libATCommandStudioDynamic.h; sourceTree = "<group>"; };
+		776D062F21E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = hook_libATCommandStudioDynamic.mm; sourceTree = "<group>"; };
+		776D063221E4A7B10001F3B7 /* hook_libQMIParserDynamic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hook_libQMIParserDynamic.h; sourceTree = "<group>"; };
+		776D063321E4A7B10001F3B7 /* hook_libQMIParserDynamic.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = hook_libQMIParserDynamic.mm; sourceTree = "<group>"; };
+		776D063621E4A8FC0001F3B7 /* hook_libBasebandUSB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hook_libBasebandUSB.h; sourceTree = "<group>"; };
+		776D063721E4A8FC0001F3B7 /* hook_libBasebandUSB.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = hook_libBasebandUSB.mm; sourceTree = "<group>"; };
+		776D063A21E4AA400001F3B7 /* hook_stdlib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hook_stdlib.h; sourceTree = "<group>"; };
+		776D063B21E4AA400001F3B7 /* hook_stdlib.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = hook_stdlib.mm; sourceTree = "<group>"; };
+		776D063E21E4AB210001F3B7 /* hook_libBasebandManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hook_libBasebandManager.h; sourceTree = "<group>"; };
+		776D063F21E4AB210001F3B7 /* hook_libBasebandManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = hook_libBasebandManager.mm; sourceTree = "<group>"; };
+		776D064221E4AB8D0001F3B7 /* hook_XPC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hook_XPC.h; sourceTree = "<group>"; };
+		776D064321E4AB8D0001F3B7 /* hook_XPC.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = hook_XPC.mm; sourceTree = "<group>"; };
+		776D064721E4CB0A0001F3B7 /* qmi-enums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "qmi-enums.h"; sourceTree = "<group>"; };
+		776D064821E4CC460001F3B7 /* qmi-errors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "qmi-errors.h"; sourceTree = "<group>"; };
+		776EBE9A21DFAF36007CB6D0 /* flip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = flip.h; sourceTree = "<group>"; };
+		776EBE9B21DFAF36007CB6D0 /* flip.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = flip.c; sourceTree = "<group>"; };
+		7776BA9321B1434200A982DA /* libInterCC.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libInterCC.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		7776BA9C21B1444400A982DA /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
+		7776BA9E21B1444C00A982DA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		7786ADCC23854C4200485F53 /* libATCommandStudioDynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libATCommandStudioDynamic.dylib; path = ../../rootfs/iphone4s_ios902/System/Library/Caches/com.apple.dyld/extracted/libATCommandStudioDynamic.dylib; sourceTree = "<group>"; };
+		7786ADCD23854C4200485F53 /* libBasebandUSB.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBasebandUSB.dylib; path = ../../rootfs/iphone4s_ios902/System/Library/Caches/com.apple.dyld/extracted/libBasebandUSB.dylib; sourceTree = "<group>"; };
+		7786ADCE23854C4200485F53 /* libQMIParserDynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libQMIParserDynamic.dylib; path = ../../rootfs/iphone4s_ios902/System/Library/Caches/com.apple.dyld/extracted/libQMIParserDynamic.dylib; sourceTree = "<group>"; };
+		77E5B47921C13393006BE362 /* qmi.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = qmi.mm; sourceTree = "<group>"; };
+		77E5B47F21C15608006BE362 /* QmiTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = QmiTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		77E5B48121C15608006BE362 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7776BA9121B1434200A982DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7786ADCF23854C4200485F53 /* libATCommandStudioDynamic.dylib in Frameworks */,
+				7786ADD023854C4200485F53 /* libBasebandUSB.dylib in Frameworks */,
+				7786ADD123854C4200485F53 /* libQMIParserDynamic.dylib in Frameworks */,
+				7760719021D38E0C00114119 /* libsubstrate.dylib in Frameworks */,
+				7776BA9F21B1444C00A982DA /* Foundation.framework in Frameworks */,
+				7776BA9D21B1444400A982DA /* IOKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77E5B47C21C15608006BE362 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7786ADD22385555E00485F53 /* libATCommandStudioDynamic.dylib in Frameworks */,
+				7786ADD32385555E00485F53 /* libBasebandUSB.dylib in Frameworks */,
+				7786ADD42385555E00485F53 /* libQMIParserDynamic.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		776D064621E4AC750001F3B7 /* hook */ = {
+			isa = PBXGroup;
+			children = (
+				776D063A21E4AA400001F3B7 /* hook_stdlib.h */,
+				776D063B21E4AA400001F3B7 /* hook_stdlib.mm */,
+				776D062A21E4A5390001F3B7 /* hook_iokit.h */,
+				776D062B21E4A5390001F3B7 /* hook_iokit.mm */,
+				776D063621E4A8FC0001F3B7 /* hook_libBasebandUSB.h */,
+				776D063721E4A8FC0001F3B7 /* hook_libBasebandUSB.mm */,
+				776D062E21E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.h */,
+				776D062F21E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.mm */,
+				776D063221E4A7B10001F3B7 /* hook_libQMIParserDynamic.h */,
+				776D063321E4A7B10001F3B7 /* hook_libQMIParserDynamic.mm */,
+				776D063E21E4AB210001F3B7 /* hook_libBasebandManager.h */,
+				776D063F21E4AB210001F3B7 /* hook_libBasebandManager.mm */,
+				776D064221E4AB8D0001F3B7 /* hook_XPC.h */,
+				776D064321E4AB8D0001F3B7 /* hook_XPC.mm */,
+			);
+			path = hook;
+			sourceTree = "<group>";
+		};
+		776D064921E4CC650001F3B7 /* libqmi */ = {
+			isa = PBXGroup;
+			children = (
+				776D064721E4CB0A0001F3B7 /* qmi-enums.h */,
+				776D064821E4CC460001F3B7 /* qmi-errors.h */,
+			);
+			path = libqmi;
+			sourceTree = "<group>";
+		};
+		7776BA7B21B1425700A982DA = {
+			isa = PBXGroup;
+			children = (
+				7776BA8621B1425700A982DA /* InterCC */,
+				77E5B48021C15608006BE362 /* QmiTest */,
+				7776BA8521B1425700A982DA /* Products */,
+				7776BA9921B1441000A982DA /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		7776BA8521B1425700A982DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7776BA9321B1434200A982DA /* libInterCC.dylib */,
+				77E5B47F21C15608006BE362 /* QmiTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7776BA8621B1425700A982DA /* InterCC */ = {
+			isa = PBXGroup;
+			children = (
+				772033B221B57B0100807168 /* dyld-interposing.h */,
+				772033B421B57B0100807168 /* colors.h */,
+				776EBE9A21DFAF36007CB6D0 /* flip.h */,
+				776EBE9B21DFAF36007CB6D0 /* flip.c */,
+				772033B621B57B0100807168 /* util.h */,
+				772033B121B57B0100807168 /* util.mm */,
+				772033B521B57B0100807168 /* qmi.h */,
+				77E5B47921C13393006BE362 /* qmi.mm */,
+				776D064921E4CC650001F3B7 /* libqmi */,
+				776D064621E4AC750001F3B7 /* hook */,
+				772033B321B57B0100807168 /* main.mm */,
+			);
+			path = InterCC;
+			sourceTree = "<group>";
+		};
+		7776BA9921B1441000A982DA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7746CBA62226A006008DF625 /* libQMIParserDynamic.dylib */,
+				7746CBA422257703008DF625 /* libBasebandUSB.dylib */,
+				7746CBA22225741B008DF625 /* libATCommandStudioDynamic.dylib */,
+				7786ADCC23854C4200485F53 /* libATCommandStudioDynamic.dylib */,
+				7786ADCD23854C4200485F53 /* libBasebandUSB.dylib */,
+				7786ADCE23854C4200485F53 /* libQMIParserDynamic.dylib */,
+				7760718F21D38E0C00114119 /* libsubstrate.dylib */,
+				7776BA9E21B1444C00A982DA /* Foundation.framework */,
+				7776BA9C21B1444400A982DA /* IOKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		77E5B48021C15608006BE362 /* QmiTest */ = {
+			isa = PBXGroup;
+			children = (
+				77E5B48121C15608006BE362 /* main.mm */,
+			);
+			path = QmiTest;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7776BA8F21B1434200A982DA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				776D063821E4A8FC0001F3B7 /* hook_libBasebandUSB.h in Headers */,
+				776D063C21E4AA400001F3B7 /* hook_stdlib.h in Headers */,
+				776D063421E4A7B10001F3B7 /* hook_libQMIParserDynamic.h in Headers */,
+				776D062C21E4A5390001F3B7 /* hook_iokit.h in Headers */,
+				776EBE9C21DFAF36007CB6D0 /* flip.h in Headers */,
+				776D064021E4AB210001F3B7 /* hook_libBasebandManager.h in Headers */,
+				772033BB21B57B0100807168 /* qmi.h in Headers */,
+				776D064421E4AB8D0001F3B7 /* hook_XPC.h in Headers */,
+				776D063021E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.h in Headers */,
+				772033BA21B57B0100807168 /* colors.h in Headers */,
+				772033BC21B57B0100807168 /* util.h in Headers */,
+				772033B821B57B0100807168 /* dyld-interposing.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7776BA9221B1434200A982DA /* InterCC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7776BA9421B1434200A982DA /* Build configuration list for PBXNativeTarget "InterCC" */;
+			buildPhases = (
+				7776BA8F21B1434200A982DA /* Headers */,
+				7776BA9021B1434200A982DA /* Sources */,
+				7776BA9121B1434200A982DA /* Frameworks */,
+				7776BAA021B1446500A982DA /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = InterCC;
+			productName = InterCC;
+			productReference = 7776BA9321B1434200A982DA /* libInterCC.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		77E5B47E21C15608006BE362 /* QmiTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77E5B48321C15608006BE362 /* Build configuration list for PBXNativeTarget "QmiTest" */;
+			buildPhases = (
+				77E5B47B21C15608006BE362 /* Sources */,
+				77E5B47C21C15608006BE362 /* Frameworks */,
+				77E5B47D21C15608006BE362 /* CopyFiles */,
+				7746CBA0222411CD008DF625 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QmiTest;
+			productName = QmiTest;
+			productReference = 77E5B47F21C15608006BE362 /* QmiTest */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7776BA7C21B1425700A982DA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Danylo Kostyshyn";
+				TargetAttributes = {
+					7776BA9221B1434200A982DA = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					77E5B47E21C15608006BE362 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 7776BA7F21B1425700A982DA /* Build configuration list for PBXProject "InterCC_armv7" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7776BA7B21B1425700A982DA;
+			productRefGroup = 7776BA8521B1425700A982DA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7776BA9221B1434200A982DA /* InterCC */,
+				77E5B47E21C15608006BE362 /* QmiTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7746CBA0222411CD008DF625 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LDID=ldid\nBINARY=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\n\n${LDID} -S ${BINARY}\nscp -o StrictHostKeyChecking=no -P 2222 ${BINARY} root@127.0.0.1:~/\n";
+		};
+		7776BAA021B1446500A982DA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LDID=ldid\nBINARY=${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\n\n${LDID} -S ${BINARY}\nscp -o StrictHostKeyChecking=no -P 2222 ${BINARY} root@127.0.0.1:~/\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7776BA9021B1434200A982DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				776D064521E4AB8D0001F3B7 /* hook_XPC.mm in Sources */,
+				776D063521E4A7B10001F3B7 /* hook_libQMIParserDynamic.mm in Sources */,
+				77E5B47A21C13393006BE362 /* qmi.mm in Sources */,
+				772033B921B57B0100807168 /* main.mm in Sources */,
+				776EBE9D21DFAF36007CB6D0 /* flip.c in Sources */,
+				772033B721B57B0100807168 /* util.mm in Sources */,
+				776D063D21E4AA400001F3B7 /* hook_stdlib.mm in Sources */,
+				776D063121E4A6E50001F3B7 /* hook_libATCommandStudioDynamic.mm in Sources */,
+				776D062D21E4A5390001F3B7 /* hook_iokit.mm in Sources */,
+				776D064121E4AB210001F3B7 /* hook_libBasebandManager.mm in Sources */,
+				776D063921E4A8FC0001F3B7 /* hook_libBasebandUSB.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77E5B47B21C15608006BE362 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				776EBE9F21DFB0B9007CB6D0 /* util.mm in Sources */,
+				77E5B48221C15608006BE362 /* main.mm in Sources */,
+				776EBE9E21DFB088007CB6D0 /* qmi.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		7776BA8921B1425700A982DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../rootfs/iphone4s_ios902/System/Library/Caches/com.apple.dyld/extracted",
+					"$(SRCROOT)/../../rootfs/iphone6_ios90/System/Library/Caches/com.apple.dyld/extracted64",
+					"$(SRCROOT)/../../rootfs/iphone7p_ios1212/System/Library/Caches/com.apple.dyld/extracted64",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		7776BA8A21B1425700A982DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../../rootfs/iphone4s_ios902/System/Library/Caches/com.apple.dyld/extracted",
+					"$(SRCROOT)/../../rootfs/iphone6_ios90/System/Library/Caches/com.apple.dyld/extracted64",
+					"$(SRCROOT)/../../rootfs/iphone7p_ios1212/System/Library/Caches/com.apple.dyld/extracted64",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		7776BA9521B1434200A982DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../tools/saurik/mobilesubstrate/data/usr/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../tools/saurik/mobilesubstrate/data/usr/lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		7776BA9621B1434200A982DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../tools/saurik/mobilesubstrate/data/usr/include",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../tools/saurik/mobilesubstrate/data/usr/lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		77E5B48421C15608006BE362 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = DBR2MMCRF5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		77E5B48521C15608006BE362 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = DBR2MMCRF5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7776BA7F21B1425700A982DA /* Build configuration list for PBXProject "InterCC_armv7" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7776BA8921B1425700A982DA /* Debug */,
+				7776BA8A21B1425700A982DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7776BA9421B1434200A982DA /* Build configuration list for PBXNativeTarget "InterCC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7776BA9521B1434200A982DA /* Debug */,
+				7776BA9621B1434200A982DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77E5B48321C15608006BE362 /* Build configuration list for PBXNativeTarget "QmiTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77E5B48421C15608006BE362 /* Debug */,
+				77E5B48521C15608006BE362 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7776BA7C21B1425700A982DA /* Project object */;
+}
